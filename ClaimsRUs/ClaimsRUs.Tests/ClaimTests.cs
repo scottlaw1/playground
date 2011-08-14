@@ -21,15 +21,6 @@ namespace ClaimsRUs.Tests
         }
 
         [Test]
-        public void ApplyTagAddsTagToClaim()
-        {
-            Assert.That(claim.GetTags().Count == 0,"The claim should not have any tags.");
-            var claimTag = new ClaimTag("testTag");
-            claim.ApplyTag(claimTag);
-            Assert.That(claim.GetTags().Count == 1,"The claim should have one tag.");
-        }
-
-        [Test]
         public void HasTagReturnsTrueIfTagExists()
         {
             claim.ApplyTag(testClaimTag);
@@ -40,6 +31,13 @@ namespace ClaimsRUs.Tests
         public void HasTagReturnsFalseIfClaimDoesNotExist()
         {
             Assert.That(claim.HasClaimTag(testClaimTag), Is.False);
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ApplyingANullTagThrowsAnException()
+        {
+            claim.ApplyTag(null);
         }
 
         private IClaim GetTestClaim()
