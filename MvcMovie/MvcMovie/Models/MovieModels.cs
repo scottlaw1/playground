@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.Entity;
 
 namespace MvcMovie.Models
 {
@@ -10,10 +9,5 @@ namespace MvcMovie.Models
         public DateTime ReleaseDate { get; set; }
         public string Genre { get; set; }
         public decimal Price { get; set; }
-    }
-
-    public class MovieDbContext : DbContext
-    {
-        public DbSet<Movie> Movies { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web.Mvc;
 using MvcMovie.Models;
@@ -53,9 +54,12 @@ namespace MvcMovie.Controllers
         //
         // GET: /Movies/Edit/5
  
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int id = 0)
         {
             Movie movie = _db.Movies.Find(id);
+            if (movie == null)
+                return HttpNotFound();
+
             return View(movie);
         }
 
@@ -93,6 +97,29 @@ namespace MvcMovie.Controllers
             _db.Movies.Remove(movie);
             _db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public ActionResult SearchIndex(string movieGenre, string searchString)
+        {
+            var genreList = new List<string>();
+
+            var genreQuery = from d in _db.Movies orderby d.Genre select d.Genre;
+
+            genreList.AddRange(genreQuery.Distinct());
+
+            ViewBag.movieGenre = new SelectList(genreList);
+
+            var movies = from m in _db.Movies select m;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                movies = movies.Where(m => m.Title.Contains(searchString));
+            }
+
+            if (string.IsNullOrEmpty(movieGenre))
+                return View(movies);
+
+            return View(movies.Where(m => m.Genre == movieGenre));
         }
 
         protected override void Dispose(bool disposing)
